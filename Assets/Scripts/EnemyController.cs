@@ -39,6 +39,11 @@ public class EnemyController : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         health -= dmg;
-        if (health <= 0) Destroy(gameObject);
+        if (health <= 0)
+        {
+            // Add memory on kill
+            MemorySystem.Instance?.AddMemory(MemorySystem.Instance.memoryPerKill);
+            Destroy(gameObject);
+        }
     }
 }

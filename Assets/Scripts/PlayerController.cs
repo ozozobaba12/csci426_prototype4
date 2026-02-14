@@ -13,10 +13,7 @@ public class PlayerController : MonoBehaviour
     public int health;
     bool isDead;
 
-    void Start()
-    {
-        health = maxHealth;
-    }
+    void Start()  => health = maxHealth;
 
     void Update()
     {
@@ -38,6 +35,9 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        // Notify memory system (may cost blood if above 80%)
+        MemorySystem.Instance?.OnPlayerAttack(this);
+        
         // Find enemies in range
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRange);
         foreach (var hit in hits)
