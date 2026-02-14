@@ -5,11 +5,17 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     public float speed = 5f;
-    public int health = 20;
+    public int maxHealth = 20;
     public float attackRange = 1f;
     public int damage = 1;
     public float attackCooldown = 0.5f;
     float nextAttack;
+    public int health;
+
+    void Start()
+    {
+        health = maxHealth;
+    }
 
     void Update()
     {
@@ -46,7 +52,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         health -= dmg;
-        if (health <= 0) Destroy(gameObject); // Game over
+        if (health < 0) Destroy(gameObject); // Game over
     }
 
     void OnDrawGizmosSelected()
