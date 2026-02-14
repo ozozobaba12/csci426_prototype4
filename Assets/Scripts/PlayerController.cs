@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public float attackCooldown = 0.5f;
     float nextAttack;
     public int health;
+    bool isDead;
 
     void Start()
     {
@@ -51,8 +52,16 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int dmg)
     {
+        if (isDead) return;
+
         health -= dmg;
-        if (health < 0) Destroy(gameObject); // Game over
+        if (health <= 0)
+        {
+            health = 0;  // Clamp to 0 for UI
+            isDead = true;
+            GameManager.Instance.PlayerDied();
+            // Don't destroy immediately — let UI update first
+        }
     }
 
     void OnDrawGizmosSelected()
