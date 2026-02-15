@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        Debug.Log("Restart clicked!");  // Check Console
+        // Debug.Log("Restart clicked!");  // Check Console
         Time.timeScale = 1f;
         UnityEngine.SceneManagement.SceneManager.LoadScene(
             UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex

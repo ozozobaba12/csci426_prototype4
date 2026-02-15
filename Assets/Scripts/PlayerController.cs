@@ -37,7 +37,7 @@ public class PlayerController : MonoBehaviour
     {
         // Notify memory system (may cost blood if above 80%)
         MemorySystem.Instance?.OnPlayerAttack(this);
-        
+
         // Find enemies in range
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRange);
         foreach (var hit in hits)
@@ -62,6 +62,11 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.PlayerDied();
             // Don't destroy immediately — let UI update first
         }
+    }
+
+    public void Heal(int amount)
+    {
+        health = Mathf.Min(health + amount, maxHealth);
     }
 
     void OnDrawGizmosSelected()
