@@ -22,6 +22,8 @@ public class MemorySystem : MonoBehaviour
     [Header("Kill Reward")]
     public float memoryPerKill = 10f;
 
+    bool hasWon;
+
     public float MemoryPercent => memory / maxMemory * 100f;
     public bool AboveThreshold1 => MemoryPercent >= threshold1;
     public bool AboveThreshold2 => MemoryPercent >= threshold2;
@@ -36,6 +38,8 @@ public class MemorySystem : MonoBehaviour
 
     void Update()
     {
+        if (hasWon) return;
+
         // Decay above 40%
         if (AboveThreshold1)
         {
@@ -54,7 +58,16 @@ public class MemorySystem : MonoBehaviour
 
     public void AddMemory(float amount)
     {
+        if (hasWon) return;
+
         memory = Mathf.Min(memory + amount, maxMemory);
+
+        // Win condition
+        if (memory >= maxMemory)
+        {
+            hasWon = true;
+            GameManager.Instance.PlayerWon();
+        }
     }
 
     public void OnPlayerAttack(PlayerController player)

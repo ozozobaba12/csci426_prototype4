@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public GameObject gameOverUI;
+    public GameObject winUI;
     public float deathDelay = 0.5f;
 
     void Awake() => Instance = this;
@@ -18,6 +19,17 @@ public class GameManager : MonoBehaviour
     {
         gameOverUI.SetActive(true);
         Time.timeScale = 0f; // Pause game
+    }
+
+    public void PlayerWon()
+    {
+        Invoke(nameof(ShowWin), 0.3f);
+    }
+
+    void ShowWin()
+    {
+        winUI.SetActive(true);
+        Time.timeScale = 0f;
     }
 
     public void Restart()
