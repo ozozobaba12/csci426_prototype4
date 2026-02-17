@@ -312,6 +312,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   sfxSource: {fileID: 129926384}
+  gameStart: {fileID: 8300000, guid: bf50d526043fac64185fdf2a10be2198, type: 3}
   playerAttack: {fileID: 8300000, guid: 98f5ba4d5e2bd21438308828a796d28a, type: 3}
   enemyDeath: {fileID: 8300000, guid: f88ecb15580ba3d4282e0638c0bd134f, type: 3}
   playerHurt: {fileID: 8300000, guid: 6025ff8caabc105408e6962ea82799be, type: 3}

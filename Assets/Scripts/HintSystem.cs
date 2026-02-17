@@ -38,6 +38,8 @@ public class HintSystem : MonoBehaviour
 
     void Start()
     {
+        // AudioManager.Instance?.PlayGameStart();
+
         hintText.fontSize = fontSize;
         QueueHint("Enemies approaching from the right! Kill enemies to fill MEMORY to win.", Color.white);
     }

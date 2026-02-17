@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource sfxSource;
 
     [Header("Sound Effects")]
+    public AudioClip gameStart;
     public AudioClip playerAttack;
     public AudioClip enemyDeath;
     public AudioClip playerHurt;
@@ -33,6 +34,7 @@ public class AudioManager : MonoBehaviour
     }
 
     // Convenience methods
+    public void PlayGameStart() => PlaySound(gameStart);
     public void PlayAttack() => PlaySound(playerAttack);
     public void PlayEnemyDeath() => PlaySound(enemyDeath);
     public void PlayPlayerHurt() => PlaySound(playerHurt);
