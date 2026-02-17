@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
             if (hit.CompareTag("Enemy"))
             {
                 hit.GetComponent<EnemyController>().TakeDamage(damage);
+                GameFeel.Instance?.OnPlayerHit();
                 break; // Hit one enemy per attack
             }
         }
@@ -58,6 +59,7 @@ public class PlayerController : MonoBehaviour
         if (isDead) return;
 
         AudioManager.Instance?.PlayPlayerHurt();
+        GameFeel.Instance?.OnPlayerHurt();
 
         health -= dmg;
         if (health <= 0)
