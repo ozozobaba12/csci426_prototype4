@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HintSystem : MonoBehaviour
 {
@@ -15,30 +16,43 @@ public class HintSystem : MonoBehaviour
     [Header("Settings")]
     public float hintDuration = 1f;
     public float fadeSpeed = 0.5f;
+    public float fontSize = 26f;
 
+    [Header("State")]
     bool threshold1Triggered;
     bool threshold2Triggered;
     bool lowHealthTriggered;
+    bool gameEnded;
+
+    Queue<HintData> hintQueue = new Queue<HintData>();
+    bool isShowingHint;
+
+    struct HintData
+    {
+        public string message;
+        public Color color;
+        public bool flash;
+    }
 
     void Awake() => Instance = this;
 
     void Start()
     {
-        StartCoroutine(ShowTutorial());
+        hintText.fontSize = fontSize;
+        QueueHint("Enemies approaching from the right! Kill enemies to fill MEMORY to win.", Color.white);
     }
 
-    IEnumerator ShowTutorial()
+    void QueueHint(string message, Color color, bool flash = false)
     {
-        yield return ShowHint("Enemies approaching from the right! Be careful to be attacked", Color.white);
-        // yield return new WaitForSeconds(0.3f);
-        // yield return ShowHint("Use WASD to move, SPACE to attack when close", Color.white);
-        // yield return new WaitForSeconds(1f);
-        yield return ShowHint("Kill enemies to fill your MEMORY bar to win.", Color.cyan);
+        hintQueue.Enqueue(new HintData { message = message, color = color, flash = flash });
     }
 
     void Update()
     {
+        if (gameEnded) return;
+
         CheckThresholds();
+        ProcessQueue();
     }
 
     void CheckThresholds()
@@ -51,16 +65,14 @@ public class HintSystem : MonoBehaviour
         if (!threshold1Triggered && memPct >= 40f)
         {
             threshold1Triggered = true;
-            StartCoroutine(ShowHint("Memory unstable! It will slowly decay now.", Color.yellow));
-            FlashScreen(Color.yellow);
+            QueueHint("Memory unstable! It will slowly decay now.", Color.yellow, true);
         }
 
         // Memory 80% threshold
-        if (!threshold2Triggered && memPct >= 80f)
+        if (!threshold2Triggered && memPct >= 90f)
         {
             threshold2Triggered = true;
-            StartCoroutine(ShowHint("DANGER! Attacks now cost blood.", Color.red));
-            FlashScreen(Color.red);
+            QueueHint("DANGER! Attacks now cost blood.", Color.red, true);
         }
 
         // Low health warning
@@ -68,28 +80,44 @@ public class HintSystem : MonoBehaviour
         if (player)
         {
             float healthPct = (float)player.health / player.maxHealth * 100f;
-            if (!lowHealthTriggered && healthPct < 50f)
+            if (!lowHealthTriggered && healthPct < 70f)
             {
                 lowHealthTriggered = true;
-                StartCoroutine(ShowHint("Blood low! Collect red pickups falling from above.", Color.green));
+                QueueHint("Blood low! Collect red pickups falling from above.", Color.green, false);
             }
-            if (healthPct >= 50f) lowHealthTriggered = false;  // Reset for re-trigger
+            if (healthPct >= 71f) lowHealthTriggered = false;  // Reset for re-trigger
         }
     }
 
-    public IEnumerator ShowHint(string message, Color color)
+    void ProcessQueue()
     {
-        hintText.text = message;
-        hintText.color = color;
+        if (!isShowingHint && hintQueue.Count > 0)
+        {
+            var hint = hintQueue.Dequeue();
+            StartCoroutine(ShowHint(hint));
+        }
+    }
+
+    IEnumerator ShowHint(HintData hint)
+    {
+        isShowingHint = true;
+
+        hintText.text = hint.message;
+        hintText.color = hint.color;
         hintPanel.alpha = 1f;
+        if (hint.flash)
+            FlashScreen(hint.color);
 
         yield return new WaitForSeconds(hintDuration);
 
-        while (hintPanel.alpha > 0)
+        while (hintPanel.alpha > 0 && !gameEnded)
         {
             hintPanel.alpha -= fadeSpeed * Time.deltaTime;
             yield return null;
         }
+
+        hintPanel.alpha = 0f;
+        isShowingHint = false;
     }
 
     public void FlashScreen(Color color)
@@ -114,6 +142,15 @@ public class HintSystem : MonoBehaviour
             yield return null;
         }
 
+        screenFlash.gameObject.SetActive(false);
+    }
+
+    public void OnGameEnd()
+    {
+        gameEnded = true;
+        StopAllCoroutines();
+        hintQueue.Clear();
+        hintPanel.alpha = 0f;
         screenFlash.gameObject.SetActive(false);
     }
 }
