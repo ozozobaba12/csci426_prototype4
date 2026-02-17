@@ -42,6 +42,7 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             AudioManager.Instance?.PlayEnemyDeath();
+            GameFeel.Instance?.OnEnemyDeath();
             // Add memory on kill
             MemorySystem.Instance?.AddMemory(MemorySystem.Instance.memoryPerKill);
             Destroy(gameObject);
