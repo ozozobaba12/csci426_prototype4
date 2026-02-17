@@ -38,6 +38,8 @@ public class HintSystem : MonoBehaviour
 
     void Start()
     {
+        // AudioManager.Instance?.PlayGameStart();
+
         hintText.fontSize = fontSize;
         QueueHint("Enemies approaching from the right! Kill enemies to fill MEMORY to win.", Color.white);
     }
@@ -65,6 +67,7 @@ public class HintSystem : MonoBehaviour
         if (!threshold1Triggered && memPct >= 40f)
         {
             threshold1Triggered = true;
+            AudioManager.Instance?.PlayWarning1();
             QueueHint("Memory unstable! It will slowly decay now.", Color.yellow, true);
         }
 
@@ -72,6 +75,7 @@ public class HintSystem : MonoBehaviour
         if (!threshold2Triggered && memPct >= 90f)
         {
             threshold2Triggered = true;
+            AudioManager.Instance?.PlayWarning2();
             QueueHint("DANGER! Attacks now cost blood.", Color.red, true);
         }
 
@@ -83,6 +87,7 @@ public class HintSystem : MonoBehaviour
             if (!lowHealthTriggered && healthPct < 70f)
             {
                 lowHealthTriggered = true;
+                AudioManager.Instance?.PlayLowHealthWarning();
                 QueueHint("Blood low! Collect red pickups falling from above.", Color.green, false);
             }
             if (healthPct >= 71f) lowHealthTriggered = false;  // Reset for re-trigger

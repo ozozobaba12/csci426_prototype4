@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDied()
     {
+        AudioManager.Instance?.PlayLose();
         HintSystem.Instance?.OnGameEnd();
         Invoke(nameof(ShowGameOver), deathDelay);
     }
@@ -24,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerWon()
     {
+        AudioManager.Instance?.PlayWin();
         HintSystem.Instance?.OnGameEnd();
         Invoke(nameof(ShowWin), 0.3f);
     }

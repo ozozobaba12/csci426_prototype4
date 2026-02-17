@@ -35,6 +35,9 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+
+        AudioManager.Instance?.PlayAttack();
+
         // Notify memory system (may cost blood if above 80%)
         MemorySystem.Instance?.OnPlayerAttack(this);
 
@@ -53,6 +56,8 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         if (isDead) return;
+
+        AudioManager.Instance?.PlayPlayerHurt();
 
         health -= dmg;
         if (health <= 0)

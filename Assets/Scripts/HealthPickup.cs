@@ -21,6 +21,7 @@ public class HealthPickup : MonoBehaviour
         // Debug.Log("Touched: " + other.name);
         if (other.CompareTag("Player"))
         {
+            AudioManager.Instance?.PlayPickup();
             other.GetComponent<PlayerController>().Heal(healAmount);
             Destroy(gameObject);
         }
